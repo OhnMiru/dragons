@@ -272,7 +272,8 @@
         const maxX = rect.width - size - 15, maxY = rect.height - size - 15;
         const left = 15 + Math.random() * maxX, top = 15 + Math.random() * maxY;
         const itemDiv = document.createElement('div');
-        itemDiv.className = type;
+        const classNameMap = { star: 'star', gold: 'gold-coin', dark: 'dark-spark', healing: 'healing-star' };
+        itemDiv.className = classNameMap[type];
         itemDiv.style.left = left + 'px'; itemDiv.style.top = top + 'px';
         itemDiv.style.width = size + 'px'; itemDiv.style.height = size + 'px';
         itemDiv.style.fontSize = (size * 0.7) + 'px';

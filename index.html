@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Эрулиенны</title>
+    <title>Эрулиенны — драконы-хранители</title>
     <style>
         * {
             margin: 0;
@@ -308,6 +308,19 @@
     </style>
 </head>
 <body>
+<script>
+    // Горизонтальный режим на телефонах — принудительная ширина 1024px (как "версия для ПК")
+    (function() {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isLandscape = window.innerWidth > window.innerHeight;
+        if (isMobile && isLandscape) {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=1024, initial-scale=0.5, maximum-scale=0.5, user-scalable=no, viewport-fit=cover');
+            }
+        }
+    })();
+</script>
 <div class="game-layout">
     <div class="header">
         <div class="dragon-name" id="dragonName">Олли</div>

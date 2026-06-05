@@ -299,7 +299,7 @@
             <div class="game-area" id="gameArea">
                 <div class="dragon" id="dragon" style="background-image: url('dragon.png');"></div>
             </div>
-            <div class="status-message" id="statusMsg">🐉 продолжай в том же духе</div>
+            <div class="status-message" id="statusMsg">Продолжай в том же духе, драконя!</div>
             <footer>води пальцем или мышкой — собирай искры ✦</footer>
         </div>
         <div class="prophecy-column">
@@ -330,7 +330,7 @@
         statusMsg.textContent = text;
         if (isTemporary) {
             currentStatusTimeout = setTimeout(() => {
-                if (statusMsg) statusMsg.textContent = "🐉 продолжай в том же духе";
+                if (statusMsg) statusMsg.textContent = "Продолжай в том же духе, драконя!";
                 currentStatusTimeout = null;
             }, 2500);
         }

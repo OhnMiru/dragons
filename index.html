@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=1024, initial-scale=0.5, maximum-scale=0.5, user-scalable=no, viewport-fit=cover">
     <title>Эрулиенны</title>
     <style>
         * {
@@ -167,6 +167,11 @@
             flex-direction: column;
         }
 
+        .prophecy-column {
+            height: 100%;
+            min-height: 0;
+        }
+
         .stats-row {
             display: flex;
             justify-content: center;
@@ -244,6 +249,8 @@
         @keyframes disappear { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.3); opacity: 0; } }
 
         .prophecy-title { font-size: 0.9rem; font-weight: bold; color: #ffcf6e; border-left: 4px solid #ffbc3c; padding-left: 10px; margin-bottom: 10px; flex-shrink: 0; }
+        
+        /* Прокрутка только для блока предсказаний, кнопка всегда видна */
         .prophecy-list {
             overflow-y: auto;
             padding-right: 6px;
@@ -252,10 +259,19 @@
             gap: 6px;
             flex: 1;
             min-height: 0;
+            max-height: 40vh;
         }
+        
         .prophecy-item { background: #362d1c; border-radius: 30px; padding: 6px 12px; color: #f7e5b1; font-size: 0.75rem; border-left: 4px solid #ffbc3c; font-style: italic; }
         .reset-button { background: #46381c; border: none; color: #ffd966; font-size: 0.7rem; padding: 8px; border-radius: 50px; margin-top: 10px; cursor: pointer; font-weight: bold; width: 100%; flex-shrink: 0; }
         .reset-button:active { background: #6b4e1c; transform: scale(0.98); }
+        
+        /* Дополнительно для горизонтального режима на телефоне — уменьшаем высоту списка */
+        @media (orientation: landscape) and (max-width: 900px) {
+            .prophecy-list {
+                max-height: 30vh;
+            }
+        }
         
         /* Новая постоянная строка состояния — без дёрганий */
         .status-message {

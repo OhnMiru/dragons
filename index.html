@@ -16,33 +16,62 @@
         body {
             min-height: 100vh;
             background: linear-gradient(145deg, #1a3a1a 0%, #0e2a0e 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: 'Segoe UI', 'Playfair Display', Georgia, serif;
-            padding: 16px;
+            padding: 12px;
         }
 
-        .game-container {
-            max-width: 700px;
-            width: 100%;
-            background: rgba(30, 25, 15, 0.6);
-            border-radius: 64px 64px 48px 48px;
+        /* Основной контейнер — адаптивный */
+        .game-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(30, 25, 15, 0.5);
+            border-radius: 48px;
             backdrop-filter: blur(3px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,215,0,0.2);
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            overflow: hidden;
+            padding: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        /* Вертикальная раскладка (по умолчанию) */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Горизонтальная раскладка (широкие экраны) */
+        @media (min-width: 800px) and (orientation: landscape) {
+            .main-content {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .game-column {
+                flex: 1.5;
+                min-width: 0;
+            }
+            .prophecy-column {
+                flex: 1;
+                min-width: 200px;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            .prophecy-list {
+                max-height: none;
+            }
+        }
+
+        .game-column, .prophecy-column {
+            background: rgba(30, 25, 15, 0.4);
+            border-radius: 32px;
+            padding: 12px;
         }
 
         .header {
-            background: #2c2112;
-            padding: 20px 20px 12px;
             text-align: center;
-            border-bottom: 2px solid #ffd966;
+            margin-bottom: 12px;
         }
 
         .dragon-name {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #ffd966;
             text-shadow: 0 2px 5px #5a3e1a;
@@ -50,19 +79,21 @@
         }
 
         .dragon-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #c9a23b;
             margin-top: 4px;
         }
 
         .stats-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 24px;
             background: #1f2a0e;
-            margin: 12px 20px 0;
-            border-radius: 60px;
-            padding: 8px 16px;
+            margin: 12px 0;
+            border-radius: 50px;
+            padding: 10px 16px;
             box-shadow: inset 0 1px 4px rgba(0,0,0,0.5), 0 2px 4px rgba(255,215,0,0.2);
+            flex-wrap: wrap;
         }
 
         .stat {
@@ -86,11 +117,9 @@
             background: #2f4425;
             background-image: radial-gradient(circle at 10% 20%, #3f6030 2%, transparent 2.5%);
             background-size: 28px 28px;
-            min-height: 380px;
-            height: 55vw;
-            max-height: 460px;
-            margin: 16px 20px 0;
-            border-radius: 48px;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            border-radius: 40px;
             overflow: hidden;
             cursor: none;
             border: 2px solid #d4af37;
@@ -99,8 +128,8 @@
 
         .dragon {
             position: absolute;
-            width: 85px;
-            height: 85px;
+            width: 14%;
+            height: 14%;
             background-image: url('dragon.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -112,35 +141,59 @@
             image-rendering: crisp-edges;
         }
 
-        .coin {
+        /* Звёздочка */
+        .star {
             position: absolute;
-            width: 32px;
-            height: 32px;
+            width: 10%;
+            height: 10%;
             background: radial-gradient(circle at 30% 30%, #ffdf80, #d4a017);
             border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: none;
             z-index: 5;
-            transition: left 0.3s ease, top 0.3s ease;
+            animation: appear 0.2s ease-out;
         }
 
-        .coin::after {
+        .star::after {
             content: "✦";
-            color: #ffecb3;
-            font-size: 18px;
-            text-shadow: 0 0 2px gold;
+            color: #fff0b5;
+            font-size: clamp(16px, 5vw, 28px);
+            text-shadow: 0 0 4px gold;
         }
 
-        .prophecy-panel {
-            background: #241f14;
-            margin: 20px 20px 20px;
-            border-radius: 40px;
-            padding: 16px 18px;
-            border-top: 1px solid #f3b33d;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 5px 12px black;
+        /* Золотая монетка */
+        .gold-coin {
+            position: absolute;
+            width: 12%;
+            height: 12%;
+            background: radial-gradient(circle at 30% 30%, #ffb347, #e68a00);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 5;
+            animation: appear 0.3s ease-out;
+        }
+
+        .gold-coin::after {
+            content: "🪙";
+            font-size: clamp(18px, 6vw, 32px);
+        }
+
+        @keyframes appear {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes disappear {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.5); opacity: 0; }
         }
 
         .prophecy-title {
@@ -154,7 +207,7 @@
         }
 
         .prophecy-list {
-            max-height: 180px;
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 6px;
             display: flex;
@@ -167,9 +220,8 @@
             border-radius: 30px;
             padding: 8px 14px;
             color: #f7e5b1;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             border-left: 4px solid #ffbc3c;
-            transition: 0.1s;
             font-style: italic;
         }
 
@@ -177,81 +229,80 @@
             background: #46381c;
             border: none;
             color: #ffd966;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             padding: 6px 14px;
             border-radius: 50px;
             margin-top: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.1s;
-            width: fit-content;
+            width: 100%;
         }
 
         .reset-button:active {
             background: #6b4e1c;
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
 
         .warning {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             text-align: center;
             color: #ffaa33;
-            margin: 8px 20px 0;
+            margin-top: 8px;
         }
 
         footer {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-align: center;
             color: #ad9a5a;
-            padding: 12px 0 18px;
-        }
-
-        @media (max-width: 550px) {
-            .dragon { width: 65px; height: 65px; }
-            .coin { width: 28px; height: 28px; }
-            .coin::after { font-size: 14px; }
+            padding: 12px 0 8px;
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
+<div class="game-layout">
     <div class="header">
         <div class="dragon-name">Олли</div>
         <div class="dragon-title">Хранитель золотых предсказаний</div>
-        <div class="stats-row">
-            <div class="stat">
-                <div class="stat-label">✦ сегодня ✦</div>
-                <div class="stat-value" id="todayCount">0</div>
-            </div>
-            <div class="stat">
-                <div class="stat-label">✦ всего ✦</div>
-                <div class="stat-value" id="totalScore">0</div>
-            </div>
-            <div class="stat">
-                <div class="stat-label">📜 осталось</div>
-                <div class="stat-value" id="leftToday">5</div>
-            </div>
-        </div>
     </div>
 
-    <div class="game-area" id="gameArea">
-        <div class="dragon" id="dragon"></div>
-    </div>
-
-    <div class="prophecy-panel">
-        <div class="prophecy-title">📜 предсказания дракона Олли</div>
-        <div class="prophecy-list" id="prophecyList">
-            <div class="prophecy-item">✦ Твоя мягкая сила меняет мир вокруг ✦</div>
+    <div class="main-content">
+        <!-- Левая колонка: игра -->
+        <div class="game-column">
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-label">📜 предсказаний сегодня</div>
+                    <div class="stat-value" id="todayCount">0 / 5</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">⭐ всего искр</div>
+                    <div class="stat-value" id="totalStars">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">⚡ до следующего</div>
+                    <div class="stat-value" id="nextIn">3</div>
+                </div>
+            </div>
+            <div class="game-area" id="gameArea">
+                <div class="dragon" id="dragon"></div>
+            </div>
+            <div class="warning" id="warningMsg"></div>
         </div>
-        <button class="reset-button" id="resetBtn">очистить предсказания</button>
+
+        <!-- Правая колонка: предсказания -->
+        <div class="prophecy-column">
+            <div class="prophecy-title">📜 предсказания дракона Олли</div>
+            <div class="prophecy-list" id="prophecyList">
+                <div class="prophecy-item">✦ Твоя мягкая сила меняет мир вокруг ✦</div>
+            </div>
+            <button class="reset-button" id="resetBtn">очистить предсказания</button>
+        </div>
     </div>
-    <div class="warning" id="warningMsg"></div>
-    <footer>Олли приносит не больше 5 предсказаний в день. Возвращайся завтра!</footer>
+    <footer>води пальцем или мышкой — собирай искры и монетки, Олли дарит мудрость</footer>
 </div>
 
 <script>
-    // ---------- БОЛЬШАЯ КОЛЛЕКЦИЯ ПРЕДСКАЗАНИЙ ----------
+    // ---------- КОЛЛЕКЦИЯ ПРЕДСКАЗАНИЙ ----------
     const PROPHECIES = [
         "Золото не блестит ярче твоей души",
         "Сегодня зелёный дракон шепчет: верь в чудо",
@@ -289,29 +340,49 @@
         "Завтрашний день получит искорку от сегодняшней игры"
     ];
 
-    // ----- Константы -----
-    const MAX_PROPHECIES_PER_DAY = 5;   // не больше 5 предсказаний в день
-    const COIN_SPAWN_DELAY = 3800;      // искра каждые 3.8 секунды
-    const COIN_MOVE_INTERVAL = 2800;    // каждые 2.8 секунды искры меняют позицию
+    // ---------- КОНСТАНТЫ ----------
+    const MAX_PROPHECIES_PER_DAY = 5;
+    const STARS_PER_PROPHECY = 3;
+    const STAR_LIFESPAN = 4000;        // 4 секунды до исчезновения
+    const SPAWN_DELAY = 2000;           // новая звезда каждые 2 секунды (если мало)
+    const GOLD_CHANCE = 0.2;            // 20% шанс золотой монетки вместо звезды
 
-    // ----- Глобальные переменные -----
-    let totalScore = 0;                  // всего собрано искр за всё время
-    let todayPropheciesCount = 0;        // сколько предсказаний получено сегодня
-    let currentProphecies = [];           // список полученных предсказаний
-    let lastDate = null;                  // дата последнего сброса
-    let coins = [];
+    // ---------- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ----------
+    let totalStars = 0;                 // всего собрано звёзд за всё время
+    let todayProphecies = 0;            // сколько предсказаний получено сегодня
+    let currentStreak = 0;              // сколько звёзд собрано с момента последнего предсказания
+    let currentProphecies = [];         // список полученных предсказаний
+    let lastDate = null;                // дата последнего сброса
+    
+    let activeItems = [];               // активные звёзды/монетки на поле
     let spawnInterval;
-    let moveInterval;
     let gameArea, dragon, warningMsg;
+    
+    // Звук (через Web Audio для совместимости)
+    let audioCtx = null;
+    function playSound() {
+        try {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 880;
+            gain.gain.value = 0.15;
+            osc.type = 'sine';
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+            osc.stop(audioCtx.currentTime + 0.5);
+            // если контекст был suspended, пробуем resume
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        } catch(e) { console.log("audio not supported"); }
+    }
 
-    // Элементы DOM
-    const todayCountSpan = document.getElementById('todayCount');
-    const totalScoreSpan = document.getElementById('totalScore');
-    const leftTodaySpan = document.getElementById('leftToday');
-    const prophecyListDiv = document.getElementById('prophecyList');
-    const resetBtn = document.getElementById('resetBtn');
-
-    // ---------- Функции работы с датой и лимитами ----------
+    // ---------- ФУНКЦИИ ДАТЫ ----------
     function getTodayKey() {
         const now = new Date();
         return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
@@ -320,29 +391,23 @@
     function resetDailyIfNeeded() {
         const today = getTodayKey();
         if (lastDate !== today) {
-            // Новый день — сбрасываем счётчик предсказаний
-            todayPropheciesCount = 0;
+            todayProphecies = 0;
+            currentStreak = 0;
             lastDate = today;
             localStorage.setItem('olli_last_date', lastDate);
-            localStorage.setItem('olli_today_prophecies', todayPropheciesCount);
-            updateStatsUI();
-            // Показываем сообщение о новом дне
+            localStorage.setItem('olli_today_prophecies', todayProphecies);
+            localStorage.setItem('olli_streak', currentStreak);
             if (warningMsg) {
                 warningMsg.textContent = "✨ Новый день! Олли снова готов дарить предсказания ✨";
-                setTimeout(() => { warningMsg.textContent = ""; }, 4000);
+                setTimeout(() => { if (warningMsg) warningMsg.textContent = ""; }, 4000);
             }
+            updateUI();
         }
     }
 
-    // Проверка, можно ли получить новое предсказание
-    function canGetNewProphecy() {
-        resetDailyIfNeeded();
-        return todayPropheciesCount < MAX_PROPHECIES_PER_DAY;
-    }
-
-    // Добавить предсказание (только если лимит не исчерпан)
-    function addProphecyIfPossible() {
-        if (!canGetNewProphecy()) {
+    // ---------- ПРЕДСКАЗАНИЯ ----------
+    function addNewProphecy() {
+        if (todayProphecies >= MAX_PROPHECIES_PER_DAY) {
             if (warningMsg) {
                 warningMsg.textContent = "Олли устал... Приходи завтра за новыми предсказаниями!";
                 setTimeout(() => { if (warningMsg) warningMsg.textContent = ""; }, 3000);
@@ -350,10 +415,8 @@
             return false;
         }
         
-        // Выбираем предсказание, которого ещё нет в списке
         let available = PROPHECIES.filter(p => !currentProphecies.includes(p));
         if (available.length === 0) {
-            // Все предсказания уже получены!
             if (warningMsg) {
                 warningMsg.textContent = "Олли рассказал все свои тайны! Ты настоящий друг дракона ✨";
             }
@@ -362,194 +425,167 @@
         
         const newProph = available[Math.floor(Math.random() * available.length)];
         currentProphecies.unshift(newProph);
-        if (currentProphecies.length > 18) currentProphecies.pop();
+        if (currentProphecies.length > 20) currentProphecies.pop();
         
-        todayPropheciesCount++;
-        localStorage.setItem('olli_today_prophecies', todayPropheciesCount);
+        todayProphecies++;
+        localStorage.setItem('olli_today_prophecies', todayProphecies);
         localStorage.setItem('olli_prophecies', JSON.stringify(currentProphecies));
         
         renderProphecies();
-        updateStatsUI();
+        updateUI();
         
         // Визуальный фидбек
-        const panel = document.querySelector('.prophecy-panel');
-        panel.style.transition = '0.1s';
-        panel.style.backgroundColor = '#3a2e1a';
-        setTimeout(() => { panel.style.backgroundColor = ''; }, 200);
+        const panel = document.querySelector('.prophecy-column');
+        if (panel) {
+            panel.style.transition = '0.1s';
+            panel.style.backgroundColor = '#3a2e1a';
+            setTimeout(() => { if (panel) panel.style.backgroundColor = ''; }, 200);
+        }
         
         return true;
     }
 
-    // Обновление статистики на экране
-    function updateStatsUI() {
-        todayCountSpan.textContent = todayPropheciesCount;
-        totalScoreSpan.textContent = totalScore;
-        const left = Math.max(0, MAX_PROPHECIES_PER_DAY - todayPropheciesCount);
-        leftTodaySpan.textContent = left;
+    // Добавление очков при сборе
+    function addStar(isGold = false) {
+        resetDailyIfNeeded();
+        
+        const points = isGold ? 2 : 1;
+        totalStars += points;
+        currentStreak += points;
+        
+        localStorage.setItem('olli_total_stars', totalStars);
+        localStorage.setItem('olli_streak', currentStreak);
+        
+        updateUI();
+        playSound(); // Дзынь!
+        
+        // Проверяем, пора ли дать предсказание
+        while (currentStreak >= STARS_PER_PROPHECY && todayProphecies < MAX_PROPHECIES_PER_DAY) {
+            currentStreak -= STARS_PER_PROPHECY;
+            addNewProphecy();
+        }
+        localStorage.setItem('olli_streak', currentStreak);
+        updateUI();
     }
 
-    // Сохранение/загрузка всех данных
-    function loadAllData() {
-        // Загружаем счёт
-        const savedTotal = localStorage.getItem('olli_total_score');
-        if (savedTotal !== null && !isNaN(parseInt(savedTotal))) {
-            totalScore = parseInt(savedTotal);
-        } else {
-            totalScore = 0;
-        }
-        
-        // Загружаем предсказания
-        const savedProphecies = localStorage.getItem('olli_prophecies');
-        if (savedProphecies) {
-            try {
-                currentProphecies = JSON.parse(savedProphecies);
-                renderProphecies();
-            } catch(e) { initDefaultProphecy(); }
-        } else {
-            initDefaultProphecy();
-        }
-        
-        // Загружаем дату и счётчик предсказаний за сегодня
-        const savedDate = localStorage.getItem('olli_last_date');
-        const savedToday = localStorage.getItem('olli_today_prophecies');
-        const today = getTodayKey();
-        
-        if (savedDate === today && savedToday !== null) {
-            lastDate = savedDate;
-            todayPropheciesCount = parseInt(savedToday) || 0;
-        } else {
-            lastDate = today;
-            todayPropheciesCount = 0;
-            localStorage.setItem('olli_last_date', lastDate);
-            localStorage.setItem('olli_today_prophecies', '0');
-        }
-        
-        updateStatsUI();
-    }
-
-    function initDefaultProphecy() {
-        currentProphecies = [ "Твоя мягкая сила меняет мир вокруг" ];
-        renderProphecies();
-        saveProphecies();
-    }
-
-    function saveProphecies() {
-        localStorage.setItem('olli_prophecies', JSON.stringify(currentProphecies));
+    // ---------- UI ----------
+    function updateUI() {
+        document.getElementById('todayCount').innerText = `${todayProphecies} / ${MAX_PROPHECIES_PER_DAY}`;
+        document.getElementById('totalStars').innerText = totalStars;
+        const needed = STARS_PER_PROPHECY - (currentStreak % STARS_PER_PROPHECY);
+        document.getElementById('nextIn').innerText = needed === STARS_PER_PROPHECY ? STARS_PER_PROPHECY : needed;
     }
 
     function renderProphecies() {
-        prophecyListDiv.innerHTML = '';
+        const container = document.getElementById('prophecyList');
+        if (!container) return;
+        container.innerHTML = '';
         for (let p of currentProphecies) {
             const div = document.createElement('div');
             div.className = 'prophecy-item';
             div.textContent = '✦ ' + p + ' ✦';
-            prophecyListDiv.appendChild(div);
+            container.appendChild(div);
+        }
+        if (currentProphecies.length === 0) {
+            const div = document.createElement('div');
+            div.className = 'prophecy-item';
+            div.textContent = '✦ Собери звёзды, и Олли поделится мудростью ✦';
+            container.appendChild(div);
         }
     }
 
-    // Добавление очков (вызывается при сборе искры)
-    function addScore(amount) {
-        totalScore += amount;
-        localStorage.setItem('olli_total_score', totalScore);
-        totalScoreSpan.textContent = totalScore;
-        
-        // Каждые 3 собранные искры даём предсказание (если лимит не исчерпан)
-        // Счётчик искр НЕ сбрасывается, но предсказания привязаны к икрам
-        // Используем временный счётчик искр с момента последнего предсказания
-        let tempCounter = parseInt(localStorage.getItem('olli_temp_counter') || '0');
-        tempCounter += amount;
-        if (tempCounter >= 3) {
-            tempCounter = 0;
-            addProphecyIfPossible();
+    function loadAllData() {
+        totalStars = parseInt(localStorage.getItem('olli_total_stars') || '0');
+        currentStreak = parseInt(localStorage.getItem('olli_streak') || '0');
+        todayProphecies = parseInt(localStorage.getItem('olli_today_prophecies') || '0');
+        lastDate = localStorage.getItem('olli_last_date');
+        const saved = localStorage.getItem('olli_prophecies');
+        if (saved) {
+            try {
+                currentProphecies = JSON.parse(saved);
+            } catch(e) { currentProphecies = []; }
         }
-        localStorage.setItem('olli_temp_counter', tempCounter);
+        resetDailyIfNeeded();
+        renderProphecies();
+        updateUI();
     }
 
-    // ---------- Игровая механика ----------
-    function createCoin() {
+    // ---------- ИГРОВАЯ МЕХАНИКА ----------
+    function createItem() {
         if (!gameArea) return;
         const rect = gameArea.getBoundingClientRect();
         if (rect.width === 0) return;
-        const coinSize = 32;
-        const maxX = Math.max(40, rect.width - coinSize - 10);
-        const maxY = Math.max(40, rect.height - coinSize - 10);
-        const left = 10 + Math.random() * (maxX - 10);
-        const top = 10 + Math.random() * (maxY - 10);
-        const coinDiv = document.createElement('div');
-        coinDiv.className = 'coin';
-        coinDiv.style.left = left + 'px';
-        coinDiv.style.top = top + 'px';
-        gameArea.appendChild(coinDiv);
-        coins.push({
-            element: coinDiv,
+        
+        const isGold = Math.random() < GOLD_CHANCE;
+        const itemSize = isGold ? 12 : 10; // процентов от ширины поля
+        const maxX = rect.width - (rect.width * itemSize / 100);
+        const maxY = rect.height - (rect.height * itemSize / 100);
+        const left = 5 + Math.random() * (maxX - 10);
+        const top = 5 + Math.random() * (maxY - 10);
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = isGold ? 'gold-coin' : 'star';
+        itemDiv.style.left = left + 'px';
+        itemDiv.style.top = top + 'px';
+        itemDiv.style.width = (rect.width * itemSize / 100) + 'px';
+        itemDiv.style.height = (rect.width * itemSize / 100) + 'px';
+        gameArea.appendChild(itemDiv);
+        
+        const item = {
+            element: itemDiv,
             x: left,
             y: top,
-            w: coinSize,
-            h: coinSize,
-            vx: (Math.random() - 0.5) * 25,
-            vy: (Math.random() - 0.5) * 25
-        });
+            w: rect.width * itemSize / 100,
+            h: rect.width * itemSize / 100,
+            isGold: isGold,
+            timeout: setTimeout(() => {
+                removeItem(item);
+            }, STAR_LIFESPAN)
+        };
+        activeItems.push(item);
     }
-
-    // Перемещение всех монет
-    function moveCoins() {
-        if (!gameArea) return;
-        const rect = gameArea.getBoundingClientRect();
-        const margin = 15;
-        for (let coin of coins) {
-            if (!coin.element) continue;
-            let newX = coin.x + coin.vx;
-            let newY = coin.y + coin.vy;
-            // Отскок от границ
-            if (newX < margin) {
-                newX = margin;
-                coin.vx = Math.abs(coin.vx) * 0.9;
-            }
-            if (newX > rect.width - coin.w - margin) {
-                newX = rect.width - coin.w - margin;
-                coin.vx = -Math.abs(coin.vx) * 0.9;
-            }
-            if (newY < margin) {
-                newY = margin;
-                coin.vy = Math.abs(coin.vy) * 0.9;
-            }
-            if (newY > rect.height - coin.h - margin) {
-                newY = rect.height - coin.h - margin;
-                coin.vy = -Math.abs(coin.vy) * 0.9;
-            }
-            coin.x = newX;
-            coin.y = newY;
-            coin.element.style.left = coin.x + 'px';
-            coin.element.style.top = coin.y + 'px';
+    
+    function removeItem(item) {
+        if (item.timeout) clearTimeout(item.timeout);
+        if (item.element && item.element.parentNode) {
+            item.element.style.animation = 'disappear 0.2s ease-out';
+            setTimeout(() => {
+                if (item.element && item.element.parentNode) item.element.remove();
+            }, 200);
         }
+        const idx = activeItems.indexOf(item);
+        if (idx !== -1) activeItems.splice(idx, 1);
     }
-
-    function removeCoin(coinObj) {
-        if (coinObj.element && coinObj.element.parentNode) coinObj.element.remove();
-        const idx = coins.indexOf(coinObj);
-        if (idx !== -1) coins.splice(idx, 1);
-    }
-
+    
     function checkCollisions(dragonRect) {
-        for (let i = coins.length-1; i >= 0; i--) {
-            const c = coins[i];
-            if (!c.element) { coins.splice(i,1); continue; }
-            const coinRect = {
-                left: c.x,
-                top: c.y,
-                right: c.x + c.w,
-                bottom: c.y + c.h
+        for (let i = activeItems.length-1; i >= 0; i--) {
+            const item = activeItems[i];
+            if (!item.element) { activeItems.splice(i,1); continue; }
+            const itemRect = {
+                left: item.x,
+                top: item.y,
+                right: item.x + item.w,
+                bottom: item.y + item.h
             };
-            if (dragonRect.right > coinRect.left && dragonRect.left < coinRect.right &&
-                dragonRect.bottom > coinRect.top && dragonRect.top < coinRect.bottom) {
-                removeCoin(c);
-                addScore(1);
+            if (dragonRect.right > itemRect.left && dragonRect.left < itemRect.right &&
+                dragonRect.bottom > itemRect.top && dragonRect.top < itemRect.bottom) {
+                addStar(item.isGold);
+                removeItem(item);
             }
         }
     }
-
-    let dragonWidth = 85, dragonHeight = 85;
-
+    
+    // ---------- УПРАВЛЕНИЕ ДРАКОНОМ ----------
+    let dragonWidth = 0, dragonHeight = 0;
+    function updateDragonSize() {
+        if (!gameArea || !dragon) return;
+        const rect = gameArea.getBoundingClientRect();
+        dragonWidth = rect.width * 0.14;
+        dragonHeight = rect.height * 0.14;
+        dragon.style.width = dragonWidth + 'px';
+        dragon.style.height = dragonHeight + 'px';
+    }
+    
     function moveDragon(clientX, clientY) {
         const areaRect = gameArea.getBoundingClientRect();
         let relX = clientX - areaRect.left;
@@ -558,7 +594,7 @@
         relY = Math.min(Math.max(relY, dragonHeight/2), areaRect.height - dragonHeight/2);
         dragon.style.left = relX + 'px';
         dragon.style.top = relY + 'px';
-
+        
         const dragonRect = {
             left: relX - dragonWidth/2,
             top: relY - dragonHeight/2,
@@ -567,7 +603,7 @@
         };
         checkCollisions(dragonRect);
     }
-
+    
     function handleStart(e) {
         e.preventDefault();
         const point = e.touches ? e.touches[0] : e;
@@ -578,42 +614,14 @@
         const point = e.touches ? e.touches[0] : e;
         moveDragon(point.clientX, point.clientY);
     }
-
+    
     function bindEvents() {
         gameArea.addEventListener('mousemove', handleMove);
         gameArea.addEventListener('mousedown', handleStart);
         gameArea.addEventListener('touchstart', handleStart, {passive: false});
         gameArea.addEventListener('touchmove', handleMove, {passive: false});
     }
-
-    function updateAreaSize() {
-        if (!gameArea) return;
-        const rect = gameArea.getBoundingClientRect();
-        let currentLeft = parseFloat(dragon.style.left);
-        let currentTop = parseFloat(dragon.style.top);
-        if (isNaN(currentLeft)) { currentLeft = rect.width/2; currentTop = rect.height/2; }
-        currentLeft = Math.min(Math.max(currentLeft, dragonWidth/2), rect.width - dragonWidth/2);
-        currentTop = Math.min(Math.max(currentTop, dragonHeight/2), rect.height - dragonHeight/2);
-        dragon.style.left = currentLeft + 'px';
-        dragon.style.top = currentTop + 'px';
-    }
-
-    function startSpawning() {
-        if (spawnInterval) clearInterval(spawnInterval);
-        spawnInterval = setInterval(() => {
-            if (coins.length < 10) {
-                createCoin();
-            }
-        }, COIN_SPAWN_DELAY);
-    }
-
-    function startMoving() {
-        if (moveInterval) clearInterval(moveInterval);
-        moveInterval = setInterval(() => {
-            moveCoins();
-        }, COIN_MOVE_INTERVAL / 10);
-    }
-
+    
     function centerDragon() {
         const rect = gameArea.getBoundingClientRect();
         if (rect.width > 0) {
@@ -623,41 +631,47 @@
             setTimeout(centerDragon, 20);
         }
     }
-
+    
+    function startSpawning() {
+        if (spawnInterval) clearInterval(spawnInterval);
+        spawnInterval = setInterval(() => {
+            if (activeItems.length < 6) {
+                createItem();
+            }
+        }, SPAWN_DELAY);
+        // сразу создаём пару элементов
+        for (let i = 0; i < 3; i++) setTimeout(() => createItem(), i * 300);
+    }
+    
     window.addEventListener('resize', () => {
         setTimeout(() => {
-            updateAreaSize();
+            updateDragonSize();
             centerDragon();
         }, 70);
     });
-
-    resetBtn.addEventListener('click', () => {
+    
+    // ---------- СБРОС ----------
+    document.getElementById('resetBtn').addEventListener('click', () => {
         currentProphecies = [];
-        todayPropheciesCount = 0;
-        localStorage.setItem('olli_today_prophecies', '0');
         localStorage.setItem('olli_prophecies', JSON.stringify([]));
-        initDefaultProphecy();
-        updateStatsUI();
-        const listDiv = prophecyListDiv;
-        listDiv.style.opacity = '0.7';
-        setTimeout(() => listDiv.style.opacity = '1', 100);
-        if (warningMsg) warningMsg.textContent = "Предсказания очищены!";
+        renderProphecies();
+        if (warningMsg) warningMsg.textContent = "Предсказания очищены! Олли ждёт новых звёзд";
         setTimeout(() => { if (warningMsg) warningMsg.textContent = ""; }, 2000);
     });
-
+    
+    // ---------- ИНИЦИАЛИЗАЦИЯ ----------
     function init() {
         gameArea = document.getElementById('gameArea');
         dragon = document.getElementById('dragon');
         warningMsg = document.getElementById('warningMsg');
         
         loadAllData();
-        updateAreaSize();
+        updateDragonSize();
         centerDragon();
         bindEvents();
         startSpawning();
-        startMoving();
     }
-
+    
     init();
 </script>
 </body>

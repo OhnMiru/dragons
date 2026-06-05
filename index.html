@@ -51,9 +51,63 @@
             gap: 10px;
         }
 
+        /* Горизонтальная раскладка — исправлено */
+        @media (orientation: landscape) {
+            .game-layout {
+                padding: 6px;
+            }
+            .game-column, .prophecy-column {
+                padding: 6px;
+            }
+            .stats-row {
+                gap: 6px;
+                padding: 4px 6px;
+                margin-bottom: 4px;
+            }
+            .stat-label {
+                font-size: 0.55rem;
+            }
+            .stat-value {
+                font-size: 0.85rem;
+            }
+            .prophecy-item {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            .status-message {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+                min-height: 36px;
+            }
+            .dragon-name {
+                font-size: 1.2rem;
+            }
+            .level-badge {
+                font-size: 0.65rem;
+                padding: 2px 8px;
+            }
+            .infection-label {
+                font-size: 0.55rem;
+            }
+            footer {
+                font-size: 0.5rem;
+                padding: 3px 0 0;
+            }
+            .prophecy-title {
+                font-size: 0.75rem;
+                margin-bottom: 6px;
+            }
+            .reset-button {
+                font-size: 0.6rem;
+                padding: 5px;
+                margin-top: 6px;
+            }
+        }
+
         @media (min-width: 800px) and (orientation: landscape) {
             .main-content {
                 flex-direction: row;
+                gap: 8px;
             }
             .game-column {
                 flex: 1.5;
@@ -63,9 +117,44 @@
             }
             .prophecy-column {
                 flex: 1;
-                min-width: 220px;
+                min-width: 160px;
                 display: flex;
                 flex-direction: column;
+            }
+        }
+        
+        /* Для узких горизонтальных экранов (телефоны) */
+        @media (max-width: 799px) and (orientation: landscape) {
+            .main-content {
+                flex-direction: row;
+                gap: 6px;
+            }
+            .game-column {
+                flex: 1.2;
+                min-width: 0;
+            }
+            .prophecy-column {
+                flex: 0.8;
+                min-width: 100px;
+            }
+            .prophecy-title {
+                font-size: 0.65rem;
+            }
+            .prophecy-item {
+                font-size: 0.55rem;
+                padding: 2px 5px;
+            }
+            .stats-row {
+                gap: 4px;
+            }
+            .stat-label {
+                font-size: 0.45rem;
+            }
+            .stat-value {
+                font-size: 0.65rem;
+            }
+            .game-area {
+                min-height: 150px;
             }
         }
 

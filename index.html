@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Эрулиенны</title>
+    <title>Олли и Эру — Драконы-Хранители</title>
     <style>
         * {
             margin: 0;
@@ -18,10 +18,10 @@
             height: 100%;
             overflow: hidden;
             position: fixed;
+            background: linear-gradient(145deg, #1a3a1a 0%, #0e2a0e 100%);
         }
 
         body {
-            background: linear-gradient(145deg, #1a3a1a 0%, #0e2a0e 100%);
             font-family: 'Segoe UI', 'Playfair Display', Georgia, serif;
         }
 
@@ -35,20 +35,26 @@
             flex-direction: column;
         }
 
-        /* Гибкая раскладка */
+        .header {
+            text-align: center;
+            flex-shrink: 0;
+            margin-bottom: 8px;
+        }
+        .dragon-name { font-size: 1.6rem; font-weight: bold; color: #ffd966; text-shadow: 0 2px 5px #5a3e1a; }
+        .level-badge { display: inline-block; background: #1f2a0e; padding: 4px 12px; border-radius: 40px; font-size: 0.8rem; font-weight: bold; color: #ffdf80; margin-top: 4px; }
+
         .main-content {
             display: flex;
             flex-direction: column;
-            gap: 12px;
             flex: 1;
             min-height: 0;
+            gap: 10px;
         }
 
         /* Горизонтальная раскладка */
         @media (min-width: 800px) and (orientation: landscape) {
             .main-content {
                 flex-direction: row;
-                align-items: stretch;
             }
             .game-column {
                 flex: 1.5;
@@ -61,12 +67,6 @@
                 min-width: 220px;
                 display: flex;
                 flex-direction: column;
-                height: auto;
-            }
-            .prophecy-list {
-                flex: 1;
-                overflow-y: auto;
-                max-height: none;
             }
         }
 
@@ -75,27 +75,20 @@
             border-radius: 32px;
             padding: 12px;
             backdrop-filter: blur(2px);
-        }
-
-        .game-column {
             display: flex;
             flex-direction: column;
         }
 
-        .header { text-align: center; margin-bottom: 12px; flex-shrink: 0; }
-        .dragon-name { font-size: 1.6rem; font-weight: bold; color: #ffd966; text-shadow: 0 2px 5px #5a3e1a; }
-        .level-badge { display: inline-block; background: #1f2a0e; padding: 4px 12px; border-radius: 40px; font-size: 0.8rem; font-weight: bold; color: #ffdf80; margin-top: 6px; }
-        
         .stats-row {
             display: flex;
             justify-content: center;
             gap: 12px;
             background: #1f2a0e;
-            margin: 8px 0;
             border-radius: 50px;
             padding: 6px 10px;
             flex-wrap: wrap;
             flex-shrink: 0;
+            margin-bottom: 8px;
         }
         .stat { text-align: center; }
         .stat-label { color: #d4b45a; font-size: 0.6rem; font-weight: bold; }
@@ -105,7 +98,7 @@
             background: #2a1a1a;
             border-radius: 20px;
             height: 8px;
-            margin: 6px 0;
+            margin: 4px 0 8px;
             overflow: hidden;
             border: 1px solid #5a3a3a;
             flex-shrink: 0;
@@ -118,15 +111,14 @@
             background: #2f4425;
             background-image: radial-gradient(circle at 10% 20%, #3f6030 2%, transparent 2.5%);
             background-size: 28px 28px;
-            aspect-ratio: 1 / 1;
             width: 100%;
             border-radius: 40px;
             overflow: hidden;
             cursor: none;
             border: 3px solid #d4af37;
             transition: background 0.3s, border-color 0.3s;
-            margin: 8px 0;
-            flex-shrink: 0;
+            flex: 1;
+            min-height: 200px;
         }
         .game-area.dark { background: #1a1a2a; background-image: radial-gradient(circle at 10% 20%, #2a2a4a 2%, transparent 2.5%); border-color: #ffaa33; }
 
@@ -143,13 +135,13 @@
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
-        /* Предметы — маленькие искры */
+        /* Предметы */
         .star, .gold-coin, .dark-spark, .healing-star {
             position: absolute;
             pointer-events: none;
             z-index: 5;
             animation: appear 0.15s ease-out;
-            font-size: clamp(14px, 4vw, 24px);
+            font-size: clamp(16px, 4vw, 26px);
             text-align: center;
             line-height: 1;
         }
@@ -178,7 +170,7 @@
         .reset-button { background: #46381c; border: none; color: #ffd966; font-size: 0.7rem; padding: 8px; border-radius: 50px; margin-top: 10px; cursor: pointer; font-weight: bold; width: 100%; flex-shrink: 0; }
         .reset-button:active { background: #6b4e1c; transform: scale(0.98); }
         .warning { font-size: 0.65rem; text-align: center; color: #ffaa33; margin-top: 6px; flex-shrink: 0; }
-        footer { font-size: 0.55rem; text-align: center; color: #ad9a5a; padding: 8px 0 4px; flex-shrink: 0; }
+        footer { font-size: 0.55rem; text-align: center; color: #ad9a5a; padding: 6px 0 0; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -226,14 +218,14 @@
 
     function getStarsNeededForNextLevel() { return (currentLevel + 1) * 5; }
     function checkLevelUp() { 
-        const neededForNext = getStarsNeededForNextLevel();
-        if (totalStars >= neededForNext && currentLevel < 50) { 
+        let needed = getStarsNeededForNextLevel();
+        while (totalStars >= needed && currentLevel < 50) { 
             currentLevel++; 
             addNewProphecy(); 
+            needed = getStarsNeededForNextLevel();
             updateUI(); 
             if (warningMsg) { warningMsg.textContent = `✨ Уровень ${currentLevel}! Новое предсказание ✨`; setTimeout(() => { if (warningMsg) warningMsg.textContent = ""; }, 2500); } 
-            checkLevelUp();
-        } 
+        }
     }
     function addStars(amount) { totalStars += amount; localStorage.setItem('olli_total_stars', totalStars); updateUI(); checkLevelUp(); }
     function addNewProphecy() { let available = PROPHECIES.filter(p => !currentProphecies.includes(p)); if (available.length === 0) { if (warningMsg) warningMsg.textContent = "Ты узнал все тайны драконов!"; return false; } const newProph = available[Math.floor(Math.random() * available.length)]; currentProphecies.unshift(newProph); if (currentProphecies.length > 25) currentProphecies.pop(); localStorage.setItem('olli_prophecies', JSON.stringify(currentProphecies)); renderProphecies(); updateUI(); return true; }
@@ -249,25 +241,25 @@
     function getDarkSparkChance() { return Math.min(0.25, DARK_SPARK_BASE_CHANCE + (currentLevel - 1) * 0.006); }
     function createItem() {
         if (!gameArea) return; const rect = gameArea.getBoundingClientRect(); if (rect.width === 0) return;
-        let type = '', sizePercent = 7, itemHtml = '';
+        let type = '', sizePercent = 7;
         if (isEruMode) {
             const darkChance = getDarkSparkChance() * 1.5;
-            if (Math.random() < darkChance) { type = 'dark'; itemHtml = '⚡'; sizePercent = 7; }
-            else { type = 'healing'; itemHtml = '💚'; sizePercent = 7; }
+            if (Math.random() < darkChance) type = 'dark';
+            else type = 'healing';
         } else {
             const darkChance = getDarkSparkChance(); const r = Math.random();
-            if (r < darkChance) { type = 'dark'; itemHtml = '⚡'; sizePercent = 7; }
-            else if (r < darkChance + GOLD_CHANCE) { type = 'gold'; itemHtml = '🪙'; sizePercent = 8; }
-            else { type = 'star'; itemHtml = '✦'; sizePercent = 6; }
+            if (r < darkChance) type = 'dark';
+            else if (r < darkChance + GOLD_CHANCE) type = 'gold';
+            else type = 'star';
         }
-        const size = rect.width * sizePercent / 100;
+        const size = Math.max(24, Math.min(48, rect.width * sizePercent / 100));
         const maxX = rect.width - size - 15, maxY = rect.height - size - 15;
         const left = 15 + Math.random() * maxX, top = 15 + Math.random() * maxY;
         const itemDiv = document.createElement('div');
-        itemDiv.className = type === 'star' ? 'star' : (type === 'gold' ? 'gold-coin' : (type === 'dark' ? 'dark-spark' : 'healing-star'));
+        itemDiv.className = type;
         itemDiv.style.left = left + 'px'; itemDiv.style.top = top + 'px';
         itemDiv.style.width = size + 'px'; itemDiv.style.height = size + 'px';
-        itemDiv.style.fontSize = (size * 0.8) + 'px';
+        itemDiv.style.fontSize = (size * 0.7) + 'px';
         gameArea.appendChild(itemDiv);
         const item = { element: itemDiv, x: left, y: top, w: size, h: size, type: type, timeout: setTimeout(() => removeItem(item), ITEM_LIFESPAN) };
         activeItems.push(item);
@@ -276,19 +268,19 @@
     function clearAllItems() { for (let item of activeItems) { if (item.timeout) clearTimeout(item.timeout); if (item.element && item.element.parentNode) item.element.remove(); } activeItems = []; }
 
     let dragonWidth = 0, dragonHeight = 0;
-    function updateDragonSize() { if (!gameArea || !dragon) return; const rect = gameArea.getBoundingClientRect(); dragonWidth = rect.width * 0.12; dragonHeight = rect.height * 0.12; dragon.style.width = dragonWidth + 'px'; dragon.style.height = dragonHeight + 'px'; }
+    function updateDragonSize() { if (!gameArea || !dragon) return; const rect = gameArea.getBoundingClientRect(); dragonWidth = Math.max(40, rect.width * 0.12); dragonHeight = Math.max(40, rect.height * 0.12); dragon.style.width = dragonWidth + 'px'; dragon.style.height = dragonHeight + 'px'; }
     function moveDragon(clientX, clientY) { const areaRect = gameArea.getBoundingClientRect(); let relX = clientX - areaRect.left, relY = clientY - areaRect.top; relX = Math.min(Math.max(relX, dragonWidth/2), areaRect.width - dragonWidth/2); relY = Math.min(Math.max(relY, dragonHeight/2), areaRect.height - dragonHeight/2); dragon.style.left = relX + 'px'; dragon.style.top = relY + 'px'; const dragonRect = { left: relX - dragonWidth/2, top: relY - dragonHeight/2, right: relX + dragonWidth/2, bottom: relY + dragonHeight/2 }; checkCollisions(dragonRect); }
     function checkCollisions(dragonRect) { for (let i = activeItems.length-1; i >= 0; i--) { const item = activeItems[i]; if (!item.element) { activeItems.splice(i,1); continue; } const itemRect = { left: item.x, top: item.y, right: item.x + item.w, bottom: item.y + item.h }; if (dragonRect.right > itemRect.left && dragonRect.left < itemRect.right && dragonRect.bottom > itemRect.top && dragonRect.top < itemRect.bottom) { if (isEruMode) { if (item.type === 'healing') { addHealingStar(); playSound(); removeItem(item); } else if (item.type === 'dark') { resetHealingProgress(); removeItem(item); } } else { if (item.type === 'star') { addStars(1); playSound(); removeItem(item); } else if (item.type === 'gold') { addStars(2); playSound(); removeItem(item); } else if (item.type === 'dark') { addInfection(INFECTION_PER_DARK); playSoundError(); removeItem(item); } } } } }
     function handleStart(e) { e.preventDefault(); const point = e.touches ? e.touches[0] : e; moveDragon(point.clientX, point.clientY); }
     function handleMove(e) { e.preventDefault(); const point = e.touches ? e.touches[0] : e; moveDragon(point.clientX, point.clientY); }
     function bindEvents() { gameArea.addEventListener('mousemove', handleMove); gameArea.addEventListener('mousedown', handleStart); gameArea.addEventListener('touchstart', handleStart, {passive: false}); gameArea.addEventListener('touchmove', handleMove, {passive: false}); }
     function centerDragon() { const rect = gameArea.getBoundingClientRect(); if (rect.width > 0) { dragon.style.left = (rect.width / 2) + 'px'; dragon.style.top = (rect.height / 2) + 'px'; } else { setTimeout(centerDragon, 20); } }
-    function startSpawning() { if (spawnInterval) clearInterval(spawnInterval); spawnInterval = setInterval(() => { if (activeItems.length < 12) createItem(); }, ITEM_SPAWN_DELAY); for (let i = 0; i < 3; i++) setTimeout(() => createItem(), i * 400); }
+    function startSpawning() { if (spawnInterval) clearInterval(spawnInterval); spawnInterval = setInterval(() => { if (activeItems.length < 10) createItem(); }, ITEM_SPAWN_DELAY); for (let i = 0; i < 3; i++) setTimeout(() => createItem(), i * 400); }
 
     function saveAll() { localStorage.setItem('olli_total_stars', totalStars); localStorage.setItem('olli_current_level', currentLevel); localStorage.setItem('olli_infection', infection); localStorage.setItem('olli_prophecies', JSON.stringify(currentProphecies)); }
     function loadAll() { totalStars = parseInt(localStorage.getItem('olli_total_stars') || '0'); currentLevel = parseInt(localStorage.getItem('olli_current_level') || '1'); infection = parseInt(localStorage.getItem('olli_infection') || '0'); const saved = localStorage.getItem('olli_prophecies'); if (saved) { try { currentProphecies = JSON.parse(saved); } catch(e) { currentProphecies = []; } } renderProphecies(); updateUI(); updateInfectionUI(); }
     function resetAllProgress() { if (confirm('Сбросить весь прогресс? Уровни, звёзды и предсказания будут удалены.')) { totalStars = 0; currentLevel = 1; infection = 0; currentProphecies = []; isEruMode = false; healingStarsCollected = 0; dragon.style.backgroundImage = "url('dragon.png')"; document.getElementById('dragonName').innerText = "Олли"; gameAreaDiv.classList.remove('dark'); clearAllItems(); saveAll(); renderProphecies(); updateUI(); updateInfectionUI(); if (warningMsg) warningMsg.textContent = "Прогресс сброшен! Начинай новое приключение."; setTimeout(() => { if (warningMsg) warningMsg.textContent = ""; }, 2000); } }
-    function updateUI() { document.getElementById('totalStars').innerText = totalStars; document.getElementById('levelDisplay').innerHTML = `⭐ Уровень ${currentLevel}`; const neededForNext = getStarsNeededForNextLevel(); const needed = Math.max(0, neededForNext - totalStars); document.getElementById('nextLevel').innerText = needed; if (isEruMode) document.getElementById('levelDisplay').innerHTML = `💚 Эру лечит (${healingStarsCollected}/${HEALING_STARS_NEEDED})`; }
+    function updateUI() { document.getElementById('totalStars').innerText = totalStars; document.getElementById('levelDisplay').innerHTML = `⭐ Уровень ${currentLevel}`; const needed = Math.max(0, (currentLevel + 1) * 5 - totalStars); document.getElementById('nextLevel').innerText = needed; if (isEruMode) document.getElementById('levelDisplay').innerHTML = `💚 Эру лечит (${healingStarsCollected}/${HEALING_STARS_NEEDED})`; }
 
     window.addEventListener('resize', () => { setTimeout(() => { updateDragonSize(); centerDragon(); }, 70); });
     document.getElementById('resetBtn').addEventListener('click', resetAllProgress);

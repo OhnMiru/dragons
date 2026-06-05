@@ -158,6 +158,44 @@
             }
         }
 
+        /* Вертикальный режим на телефонах — увеличиваем игровую область */
+        @media (max-width: 800px) and (orientation: portrait) {
+            .game-column {
+                padding: 8px;
+            }
+            .game-area {
+                min-height: 55vh;
+                flex: 0 0 auto;
+            }
+            .prophecy-list {
+                max-height: 25vh;
+            }
+            .stats-row {
+                gap: 8px;
+                padding: 4px 8px;
+            }
+            .stat-label {
+                font-size: 0.55rem;
+            }
+            .stat-value {
+                font-size: 0.9rem;
+            }
+            .status-message {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+                min-height: 40px;
+            }
+            .reset-button {
+                padding: 6px;
+                font-size: 0.65rem;
+                margin-top: 8px;
+            }
+            .prophecy-item {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+        }
+
         .game-column, .prophecy-column {
             background: rgba(30, 25, 15, 0.5);
             border-radius: 32px;
@@ -250,7 +288,7 @@
 
         .prophecy-title { font-size: 0.9rem; font-weight: bold; color: #ffcf6e; border-left: 4px solid #ffbc3c; padding-left: 10px; margin-bottom: 10px; flex-shrink: 0; }
         
-        /* Прокрутка только для блока предсказаний, кнопка всегда видна */
+        /* Прокрутка для списка предсказаний */
         .prophecy-list {
             overflow-y: auto;
             padding-right: 6px;
@@ -259,19 +297,12 @@
             gap: 6px;
             flex: 1;
             min-height: 0;
-            max-height: 40vh;
+            max-height: 30vh;
         }
         
         .prophecy-item { background: #362d1c; border-radius: 30px; padding: 6px 12px; color: #f7e5b1; font-size: 0.75rem; border-left: 4px solid #ffbc3c; font-style: italic; }
         .reset-button { background: #46381c; border: none; color: #ffd966; font-size: 0.7rem; padding: 8px; border-radius: 50px; margin-top: 10px; cursor: pointer; font-weight: bold; width: 100%; flex-shrink: 0; }
         .reset-button:active { background: #6b4e1c; transform: scale(0.98); }
-        
-        /* Дополнительно для горизонтального режима на телефоне — уменьшаем высоту списка */
-        @media (orientation: landscape) and (max-width: 900px) {
-            .prophecy-list {
-                max-height: 30vh;
-            }
-        }
         
         /* Новая постоянная строка состояния — без дёрганий */
         .status-message {

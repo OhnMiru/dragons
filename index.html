@@ -175,7 +175,7 @@
 <div class="game-layout">
     <div class="header">
         <div class="dragon-name" id="dragonName">Олли</div>
-        <div class="level-badge" id="levelDisplay">⭐ Уровень 1</div>
+        <div class="level-badge" id="levelDisplay">⭐ Уровень 1 ⭐</div>
     </div>
     <div class="main-content">
         <div class="game-column">
@@ -203,10 +203,10 @@
     const PROPHECIES = [ "Золото не блестит ярче твоей души", "Верь в чудо", "Маленький шаг к большому сокровищу", "Олли помнит твои добрые мысли", "Внутри тебя живёт пламя", "Каждый лист приносит надежду", "Спокойствие — твоя магия", "Удача с тобой", "Иногда лучшее действие — пауза", "Твоя улыбка создаёт золото", "Олли видит твой путь", "Собери семь искр, загадай желание", "Бережность к себе — дар", "Зелёный цвет принесёт вдохновение", "Олли благодарит тебя", "Творчество — крылья", "Тень монеты приносит удачу", "Мудрость растёт в тишине", "Твоё терпение — золото", "Ночью звёзды ярче", "Твоя доброта — магнит", "Зелёный лес внутри цветёт", "Искра — знак лёгкого дня", "Олли желает озарений", "Мягкость — твоя сила", "Драконья защита обнимает", "Слова обретут крылья", "Радость в привычном", "Олли копит светлые перемены", "Вспомни, как сверкают искры", "Твой свет мягок", "Один вдох — начало", "Ты не одна", "Завтрашний день получит искру" ];
     const INFECTION_PER_DARK = 100/3;
     const HEALING_STARS_NEEDED = 10;
-    const ITEM_SPAWN_DELAY = 2000;
-    const ITEM_LIFESPAN = 4500;
+    const ITEM_SPAWN_DELAY = 1000;
+    const ITEM_LIFESPAN = 2500;
     const GOLD_CHANCE = 0.12;
-    const DARK_SPARK_BASE_CHANCE = 0.055;
+    const DARK_SPARK_BASE_CHANCE = 0.155;
 
     let totalStars = 0, starsThisLevel = 0, currentLevel = 1, infection = 0;
     let isEruMode = false, healingStarsCollected = 0, currentProphecies = [], activeItems = [];
@@ -291,7 +291,7 @@
     function handleMove(e) { e.preventDefault(); const point = e.touches ? e.touches[0] : e; moveDragon(point.clientX, point.clientY); }
     function bindEvents() { gameArea.addEventListener('mousemove', handleMove); gameArea.addEventListener('mousedown', handleStart); gameArea.addEventListener('touchstart', handleStart, {passive: false}); gameArea.addEventListener('touchmove', handleMove, {passive: false}); }
     function centerDragon() { const rect = gameArea.getBoundingClientRect(); if (rect.width > 0) { dragon.style.left = (rect.width / 2) + 'px'; dragon.style.top = (rect.height / 2) + 'px'; } else { setTimeout(centerDragon, 20); } }
-    function startSpawning() { if (spawnInterval) clearInterval(spawnInterval); spawnInterval = setInterval(() => { if (activeItems.length < 10) createItem(); }, ITEM_SPAWN_DELAY); for (let i = 0; i < 3; i++) setTimeout(() => createItem(), i * 400); }
+    function startSpawning() { if (spawnInterval) clearInterval(spawnInterval); spawnInterval = setInterval(() => { if (activeItems.length < 20) createItem(); }, ITEM_SPAWN_DELAY); for (let i = 0; i < 3; i++) setTimeout(() => createItem(), i * 400); }
 
     function saveAll() {
         localStorage.setItem('olli_total_stars', totalStars);

@@ -371,7 +371,7 @@
 
     function updateUI() {
         document.getElementById('totalStars').innerText = totalStars;
-        document.getElementById('levelDisplay').innerHTML = `⭐ Уровень ${currentLevel}`;
+        document.getElementById('levelDisplay').innerHTML = `⭐ Уровень ${currentLevel} ⭐`;
         const needed = Math.max(0, getStarsNeededForLevel() - starsThisLevel);
         document.getElementById('nextLevel').innerText = needed;
         if (isEruMode) document.getElementById('levelDisplay').innerHTML = `💚 Эру лечит (${healingStarsCollected}/${HEALING_STARS_NEEDED})`;
